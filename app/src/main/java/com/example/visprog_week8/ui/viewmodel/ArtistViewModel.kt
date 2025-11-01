@@ -9,9 +9,9 @@ import com.example.visprog_week8.data.repository.ArtistRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import kotlin.math.roundToInt
 
 class ArtistViewModel(
     private val repository: ArtistRepository = ArtistRepository()
@@ -38,11 +38,7 @@ class ArtistViewModel(
                     val artist = artistResult.await().getOrThrow()
                     val albums = albumsResult.await().getOrThrow()
 
-                    if (artist != null) {
-                        artistUiState = ArtistUiState.Success(artist, albums)
-                    } else {
-                        handleApiError(Exception("Artist not found."))
-                    }
+                    artistUiState = ArtistUiState.Success(artist, albums)
                 }
             } catch (e: Exception) {
                 handleApiError(e)
@@ -61,11 +57,7 @@ class ArtistViewModel(
                     val albumDetail = detailResult.await().getOrThrow()
                     val tracks = tracksResult.await().getOrThrow()
 
-                    if (albumDetail != null) {
-                        albumDetailUiState = AlbumDetailUiState.Success(albumDetail, tracks)
-                    } else {
-                        handleApiError(Exception("Album details not found."), isAlbumDetail = true)
-                    }
+                    albumDetailUiState = AlbumDetailUiState.Success(albumDetail, tracks)
                 }
             } catch (e: Exception) {
                 handleApiError(e, isAlbumDetail = true)
@@ -73,23 +65,35 @@ class ArtistViewModel(
         }
     }
 
+    /**
+     * Utility function to format track duration from milliseconds (String) to minutes:seconds format (m:ss).
+     * Now includes robust check against empty, null, or non-numeric input.
+     */
     fun formatDuration(durationMs: String?): String {
         return try {
+            // Use toLongOrNull() for safe parsing, returning "N/A" on failure.
             val millis = durationMs?.toLongOrNull() ?: return "N/A"
             val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(millis)
             val minutes = totalSeconds / 60
             val seconds = totalSeconds % 60
 
+            // Format to m:ss, ensuring seconds are always two digits (e.g., 3:07)
             String.format("%d:%02d", minutes, seconds)
         } catch (e: Exception) {
+            // Catch any unexpected runtime errors during calculation
             "N/A"
         }
     }
 
     private fun handleApiError(e: Throwable?, isAlbumDetail: Boolean = false) {
+        // Updated error messaging to provide more detail based on the crash type.
         val errorMessage = when (e) {
             is IOException -> "Network Error: Check connection"
             is NoSuchElementException -> "Error: Data not found."
+            is HttpException -> "HTTP Error: ${e.code()}"
+            // New cases added from Repository catch
+            is IllegalStateException -> "Error: Serialization failed (Data mismatch)."
+            is NullPointerException -> "Error: Missing critical API data."
             else -> "Error: Unknown error occurred."
         }
 
