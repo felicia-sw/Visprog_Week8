@@ -5,11 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newproject.data.model.AlbumDetail
-import com.example.newproject.data.model.AlbumSummary
-import com.example.newproject.data.model.Artist
-import com.example.newproject.data.model.Track
-import com.example.newproject.data.repository.ArtistRepository
+import com.example.visprog_week8.data.repository.ArtistRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

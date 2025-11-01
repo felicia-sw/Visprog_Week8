@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // Using a placeholder theme container since the theme files were not provided in the new package.
             MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

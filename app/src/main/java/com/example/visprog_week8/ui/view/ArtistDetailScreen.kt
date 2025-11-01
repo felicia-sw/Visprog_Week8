@@ -134,7 +134,8 @@ fun ArtistContent(
         OutlinedCard(
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.outlinedCardColors(containerColor = CardColor),
-            border = BorderDefaults.outlinedCardBorder(true, CardColor),
+            // This is the corrected line
+            border = BorderStroke(1.dp, CardColor),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -179,7 +180,8 @@ fun AlbumGridItem(album: AlbumSummary, onClick: (String) -> Unit) {
         onClick = { onClick(album.idAlbum) },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = CardColor),
-        border = BorderDefaults.outlinedCardBorder(true, CardColor),
+        // This is the corrected line
+        border = BorderStroke(1.dp, CardColor),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(

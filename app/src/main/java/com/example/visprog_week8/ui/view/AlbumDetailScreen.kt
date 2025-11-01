@@ -2,7 +2,6 @@ package com.example.visprog_week8.ui.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -130,13 +129,17 @@ fun AlbumContent(
             }
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Tracks Header
+
+// Tracks Header
             Text(
                 text = "Tracks",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextColor,
-                modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
+                // Change this modifier
+                modifier = Modifier
+                    .fillMaxWidth() // Use fillMaxWidth() to align left
+                    .padding(bottom = 8.dp)
             )
         }
 

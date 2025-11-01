@@ -1,7 +1,8 @@
 package com.example.visprog_week8.data.Container
 
-import com.example.newproject.data.service.ArtistService
-import com.example.newproject.util.ArtistConstants
+
+import com.example.visprog_week8.data.service.ArtistService
+import com.example.visprog_week8.util.ArtistConstants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
