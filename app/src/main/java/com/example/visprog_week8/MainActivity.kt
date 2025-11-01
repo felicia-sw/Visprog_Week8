@@ -1,4 +1,4 @@
-package com.example.newproject
+package com.example.visprog_week8
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

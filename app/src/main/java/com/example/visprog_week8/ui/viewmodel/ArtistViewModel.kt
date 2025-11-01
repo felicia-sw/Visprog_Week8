@@ -24,7 +24,11 @@ class ArtistViewModel(
         private set
 
     init {
-        loadArtistData("John Mayer")
+        try {
+            loadArtistData("John Mayer")
+        } catch (e: Exception) {
+            handleApiError(e)
+        }
     }
 
     fun loadArtistData(artistName: String) {
