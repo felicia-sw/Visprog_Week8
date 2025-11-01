@@ -26,11 +26,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.newproject.data.model.AlbumSummary
-import com.example.newproject.data.model.Artist
-import com.example.newproject.ui.navigation.Screen
-import com.example.newproject.ui.viewmodel.ArtistUiState
-import com.example.newproject.ui.viewmodel.ArtistViewModel
+import com.example.visprog_week8.data.model.AlbumSummary
+import com.example.visprog_week8.data.model.Artist
+import com.example.visprog_week8.ui.viewmodel.ArtistUiState
+import com.example.visprog_week8.ui.viewmodel.ArtistViewModel
 
 private val PrimaryDark = Color(0xFF282828)
 private val CardColor = Color(0xFF323030)

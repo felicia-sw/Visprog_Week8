@@ -1,9 +1,10 @@
 package com.example.visprog_week8.ui.viewmodel
 
-import com.example.newproject.data.model.AlbumDetail
-import com.example.newproject.data.model.AlbumSummary
-import com.example.newproject.data.model.Artist
-import com.example.newproject.data.model.Track
+import com.example.visprog_week8.data.model.AlbumDetail
+import com.example.visprog_week8.data.model.AlbumSummary
+import com.example.visprog_week8.data.model.Artist
+import com.example.visprog_week8.data.model.Track
+
 
 sealed class ArtistUiState {
     data object Loading : ArtistUiState()

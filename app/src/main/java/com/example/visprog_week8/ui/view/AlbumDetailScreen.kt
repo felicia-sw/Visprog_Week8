@@ -2,6 +2,7 @@ package com.example.visprog_week8.ui.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +22,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.newproject.data.model.AlbumDetail
-import com.example.newproject.data.model.Track
-import com.example.newproject.ui.viewmodel.AlbumDetailUiState
-import com.example.newproject.ui.viewmodel.ArtistViewModel
+import com.example.visprog_week8.data.model.AlbumDetail
+import com.example.visprog_week8.data.model.Track
+import com.example.visprog_week8.ui.viewmodel.AlbumDetailUiState
+import com.example.visprog_week8.ui.viewmodel.ArtistViewModel
 
 private val PrimaryDark = Color(0xFF282828)
 private val CardColor = Color(0xFF323030)

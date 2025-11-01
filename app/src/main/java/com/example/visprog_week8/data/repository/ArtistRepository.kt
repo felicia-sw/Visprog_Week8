@@ -1,6 +1,10 @@
 package com.example.visprog_week8.data.repository
 
 import com.example.visprog_week8.data.Container.Container
+import com.example.visprog_week8.data.model.AlbumDetail
+import com.example.visprog_week8.data.model.AlbumSummary
+import com.example.visprog_week8.data.model.Artist
+import com.example.visprog_week8.data.model.Track
 import com.example.visprog_week8.data.service.ArtistService
 import retrofit2.HttpException
 import java.io.IOException

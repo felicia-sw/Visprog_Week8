@@ -19,9 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
-import com.example.newproject.ui.navigation.Screen
-import com.example.newproject.ui.view.AlbumDetailScreen
-import com.example.newproject.ui.view.ArtistDetailScreen
+import com.example.visprog_week8.ui.view.AlbumDetailScreen
+import com.example.visprog_week8.ui.view.ArtistDetailScreen
+import com.example.visprog_week8.ui.view.Screen
 
 /**
  * Main Activity serves as the entry point and hosts the navigation graph for the Artist Explorer App.

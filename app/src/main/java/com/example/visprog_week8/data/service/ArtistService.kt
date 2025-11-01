@@ -1,9 +1,10 @@
 package com.example.visprog_week8.data.service
 
-import com.example.newproject.data.model.AlbumDetailResponse
-import com.example.newproject.data.model.AlbumSearchResponse
-import com.example.newproject.data.model.ArtistResponse
-import com.example.newproject.data.model.TrackResponse
+
+import com.example.visprog_week8.data.model.AlbumDetailResponse
+import com.example.visprog_week8.data.model.AlbumSearchResponse
+import com.example.visprog_week8.data.model.ArtistResponse
+import com.example.visprog_week8.data.model.TrackResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
