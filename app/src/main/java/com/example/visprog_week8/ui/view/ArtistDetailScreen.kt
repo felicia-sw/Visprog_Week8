@@ -1,7 +1,6 @@
 package com.example.visprog_week8.ui.view
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -10,8 +9,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,11 +29,11 @@ import com.example.visprog_week8.ui.viewmodel.ArtistUiState
 import com.example.visprog_week8.ui.viewmodel.ArtistViewModel
 
 private val PrimaryDark = Color(0xFF282828)
-private val CardColor = Color(0xFF323030)
+private val CardColor = Color(0xFF181818) // Darker card color
 private val TextColor = Color(0xFFFBF1C7)
 private val AccentColor = Color(0xFFFE8019)
+private val GruvboxGrey = Color(0xFF504945) // Darker grey for borders
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArtistDetailScreen(
     navController: NavController,
@@ -44,30 +41,20 @@ fun ArtistDetailScreen(
 ) {
     val uiState = viewModel.artistUiState
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Artist Explorer", color = TextColor) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryDark),
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = TextColor)
-                    }
-                }
-            )
-        },
-        containerColor = PrimaryDark
-    ) { paddingValues ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PrimaryDark)
+    ) {
         when (uiState) {
-            ArtistUiState.Loading -> LoadingScreen(modifier = Modifier.padding(paddingValues))
-            is ArtistUiState.Error -> ErrorScreen(uiState.message, modifier = Modifier.padding(paddingValues))
+            ArtistUiState.Loading -> LoadingScreen()
+            is ArtistUiState.Error -> ErrorScreen(uiState.message)
             is ArtistUiState.Success -> ArtistContent(
                 artist = uiState.artist,
                 albums = uiState.albums,
                 onAlbumClick = { albumId ->
                     navController.navigate(Screen.AlbumDetail.createRoute(albumId))
-                },
-                modifier = Modifier.padding(paddingValues)
+                }
             )
         }
     }
@@ -87,126 +74,124 @@ fun ArtistContent(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- 1. Artist Banner/Thumbnail ---
-        OutlinedCard(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.outlinedCardColors(containerColor = CardColor),
-            border = BorderStroke(1.dp, CardColor),
-            modifier = Modifier.fillMaxWidth().height(250.dp)
+        // --- Artist Name Header (Centered) ---
+        Text(
+            text = artist.strArtist ?: "Unknown Artist",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium,
+            color = TextColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
+
+        // --- Artist Image Card (Rounded, No Overlay) ---
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = CardColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
         ) {
-            Box(Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
-                    model = artist.strArtistBanner ?: artist.strArtistThumb,
-                    contentDescription = "${artist.strArtist} Banner",
+                    model = artist.strArtistThumb ?: artist.strArtistBanner,
+                    contentDescription = "${artist.strArtist} Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
-                // Name and Genre Overlay
-                Column(
-                    modifier = Modifier.align(Alignment.BottomStart)
-                        .background(Color.Black.copy(alpha = 0.5f))
-                        .padding(12.dp)
+
+                // Genre overlay at bottom left
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .background(Color.Black.copy(alpha = 0.6f))
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = artist.strArtist ?: "Unknown Artist",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextColor
-                    )
-                    Text(
                         text = artist.strGenre ?: "Unknown Genre",
-                        fontSize = 16.sp,
-                        color = AccentColor
+                        fontSize = 14.sp,
+                        color = AccentColor,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // --- 2. Biography Section ---
-        Text(
-            text = "Biography",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextColor,
-            modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
-        )
-        OutlinedCard(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.outlinedCardColors(containerColor = CardColor),
-            // This is the corrected line
-            border = BorderStroke(1.dp, CardColor),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = artist.strBiographyEN ?: "No biography available.",
-                color = TextColor.copy(alpha = 0.8f),
-                fontSize = 14.sp,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
         Spacer(modifier = Modifier.height(24.dp))
 
-        // --- 3. Albums Grid Header ---
+        // --- Albums Section Header ---
         Text(
             text = "Albums",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
             color = TextColor,
-            modifier = Modifier.align(Alignment.Start).padding(bottom = 12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
-        // --- 4. Albums Grid (LazyVerticalGrid) ---
+        // --- Albums Grid ---
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(0.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .heightIn(min = 200.dp, max = 800.dp)
-                .fillMaxWidth()
+                .heightIn(min = 200.dp, max = 1000.dp)
+                .fillMaxWidth(),
+            userScrollEnabled = false // Disable internal scrolling since we're in a scrollable column
         ) {
             items(albums, key = { it.idAlbum }) { album ->
                 AlbumGridItem(album = album, onClick = onAlbumClick)
             }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
 fun AlbumGridItem(album: AlbumSummary, onClick: (String) -> Unit) {
-    OutlinedCard(
+    Card(
         onClick = { onClick(album.idAlbum) },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.outlinedCardColors(containerColor = CardColor),
-        // This is the corrected line
-        border = BorderStroke(1.dp, CardColor),
+        colors = CardDefaults.cardColors(containerColor = CardColor),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(8.dp)
         ) {
+            // Album Cover
             AsyncImage(
                 model = album.strAlbumThumb,
                 contentDescription = "${album.strAlbum} Cover",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().aspectRatio(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
                     .clip(RoundedCornerShape(8.dp))
             )
+
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Album Title
             Text(
                 text = album.strAlbum,
                 color = TextColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
             )
+
+            // Year and Genre
             Text(
-                text = album.intYearReleased ?: "N/A",
-                color = TextColor.copy(alpha = 0.7f),
-                fontSize = 12.sp
+                text = "${album.intYearReleased ?: "N/A"} • Indie",
+                color = TextColor.copy(alpha = 0.6f),
+                fontSize = 12.sp,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
@@ -215,12 +200,16 @@ fun AlbumGridItem(album: AlbumSummary, onClick: (String) -> Unit) {
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().background(PrimaryDark),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator(color = AccentColor)
-            Text(text = "Loading...", color = TextColor, modifier = Modifier.padding(top = 16.dp))
+            Text(
+                text = "Loading...",
+                color = TextColor,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
     }
 }
@@ -228,7 +217,10 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ErrorScreen(errorMessage: String, modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxSize().padding(32.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .background(PrimaryDark)
+            .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
