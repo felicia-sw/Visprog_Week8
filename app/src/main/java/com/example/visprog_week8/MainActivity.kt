@@ -1,47 +1,79 @@
-package com.example.visprog_week8
+package com.example.newproject
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.visprog_week8.ui.theme.Visprog_Week8Theme
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
+import com.example.newproject.ui.navigation.Screen
+import com.example.newproject.ui.view.AlbumDetailScreen
+import com.example.newproject.ui.view.ArtistDetailScreen
 
+/**
+ * Main Activity serves as the entry point and hosts the navigation graph for the Artist Explorer App.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Visprog_Week8Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            // Using a placeholder theme container since the theme files were not provided in the new package.
+            MaterialTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color(0xFF282828) // Dark background for the app
+                ) {
+                    ArtistExplorerNavHost()
                 }
             }
         }
     }
 }
 
+// NavHost function defined to manage the screen transitions
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun ArtistExplorerNavHost() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = Screen.ArtistDetail.route // Start on the Artist Detail screen
+    ) {
+        composable(route = Screen.ArtistDetail.route) {
+            ArtistDetailScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.AlbumDetail.route,
+            arguments = listOf(navArgument("albumId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val albumId = backStackEntry.arguments?.getString("albumId")
+            if (albumId != null) {
+                AlbumDetailScreen(navController = navController, albumId = albumId)
+            } else {
+                Text("Error: Album ID missing", color = Color.Red)
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    Visprog_Week8Theme {
-        Greeting("Android")
+    MaterialTheme {
+        ArtistExplorerNavHost()
     }
 }
